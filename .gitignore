@@ -4,7 +4,6 @@ __pycache__/
 
 # Ignore test/report artifacts and guardrails docs
 reports/
-Guardrails/
 
 # Pytest cache
 .pytest_cache/
