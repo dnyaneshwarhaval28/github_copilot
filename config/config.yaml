@@ -1,0 +1,8 @@
+browser: chromium
+headless: false
+timeout: 50000
+
+urls:
+  login: "/web/index.php/auth/login"
+  pim_list: "/web/index.php/pim/viewEmployeeList"
+  add_employee: "/web/index.php/pim/addEmployee"
