@@ -22,7 +22,7 @@ def browser(config):
 
         browser = getattr(p, browser_type).launch(headless=headless)
         yield browser
-        browser.close()
+        # browser.close()
 
 
 @pytest.fixture(scope="function")
@@ -31,7 +31,7 @@ def page(browser, config):
     page = context.new_page()
     page.set_default_timeout(config["timeout"])
     yield page
-    page.close()
+    # page.close()
 
 
 @pytest.fixture(scope="session")

@@ -6,6 +6,7 @@ class PimPage(BasePage):
     FIRST_NAME = "input[name='firstName']"
     LAST_NAME = "input[name='lastName']"
     SAVE_BTN = "//button[normalize-space()='Save']"
+    employee_profile = "//div[@class='orangehrm-edit-employee-name']/h6"
 
     EMP_NAME_SEARCH = "(//input[@placeholder='Type for hints...'])[1]"
     SEARCH_BTN = "//button[normalize-space()='Search']"
@@ -17,13 +18,19 @@ class PimPage(BasePage):
         self.fill(self.LAST_NAME, last_name)
         self.click(self.SAVE_BTN)
 
+    def verify_employee_added(self):
+        locator = self.page.locator(self.employee_profile)
+        locator.wait_for(state="visible")
+        actual_name = locator.inner_text().strip()
+        return actual_name
+
     def search_employee(self, name):
         self.fill(self.EMP_NAME_SEARCH, name)
         self.click(self.SEARCH_BTN)
 
     def is_employee_present(self):
         return self.page.locator(self.EMP_RECORD).count() > 0
-
+    
 class AddEmployeePage(BasePage):
 
     ADD_BTN = "//button[normalize-space()='Add']"
@@ -40,7 +47,12 @@ class AddEmployeePage(BasePage):
         self.click(self.SAVE_BTN)
 
     def is_validation_error_displayed(self):
-        return self.page.locator(self.REQUIRED_ERROR).count() > 0
+        try:
+            self.page.locator(self.REQUIRED_ERROR).wait_for(timeout=3000)
+            return True
+        except:
+            return False
+
 
 class PimEmployeeListPage(BasePage):
     """Page Object for PIM Employee List - Search and validate employees"""

@@ -31,11 +31,12 @@ class TestPimAddEmployee:
         # Act - Add employee
         pim_page = PimPage(page)
         pim_page.add_employee(first_name, last_name)
-        time.sleep(2)
+        time.sleep(5)
         
         # Assert - Verify employee was added
-        assert pim_page.is_employee_present(), \
-            "Employee record not found after adding new employee"
+        actual_name = pim_page.verify_employee_added()
+        assert actual_name == first_name + " " + last_name, \
+            f"Expected '{first_name} {last_name}', but got '{actual_name}'"
 
     def test_add_employee_with_empty_first_name(self, page, base_url):
         """
@@ -56,7 +57,7 @@ class TestPimAddEmployee:
         
         add_emp_page = AddEmployeePage(page)
         add_emp_page.add_employee("", last_name)
-        time.sleep(1)
+        time.sleep(2)
         
         # Assert
         assert add_emp_page.is_validation_error_displayed(), \
