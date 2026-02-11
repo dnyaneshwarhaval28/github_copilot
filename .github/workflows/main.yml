@@ -31,12 +31,12 @@ jobs:
       # Run Pytest with HTML + Allure
       - name: Run Pytest tests
         run: |
-          pytest -v --html=report.html --self-contained-html --alluredir=allure-results
+          pytest -v --html=reports/report.html --self-contained-html --alluredir=reports/allure-results
 
       - name: Verify Allure Results
         run: |
           echo "Checking allure-results..."
-          ls -R allure-results
+          ls -R reports/allure-results
 
       # Install Allure CLI
       - name: Install Allure CLI
@@ -51,7 +51,7 @@ jobs:
       # Generate Allure HTML Report
       - name: Generate Allure Report
         run: |
-          allure generate allure-results --clean -o allure-report --single-file
+          allure generate reports/allure-results --clean -o reports/allure-report --single-file
 
       # Upload Pytest HTML Report
       - name: Upload Pytest HTML Report
@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pytest-report
-          path: report.html
+          path: reports/report.html
 
       # Upload Allure Report
       - name: Upload Allure Report
@@ -67,4 +67,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: allure-report
+          path: |
+            # prefer directory contents
+            reports/allure-report/**
+            # fallback single-file outputs
+            reports/allure-report.html
+            reports/allure-report.zip
+            reports/allure-report
