@@ -1,4 +1,4 @@
-name: Github copilot Automation Tests
+name: Github Copilot Automation Tests
 
 on:
   push:
@@ -28,15 +28,22 @@ jobs:
           pip install -r requirements.txt
           playwright install --with-deps
 
-      # Run Pytest with HTML + Allure (write outputs under reports/)
+      # Run Pytest with HTML + Allure reports
       - name: Run Pytest tests
         run: |
-          pytest -v --html=reports/report.html --self-contained-html --alluredir=reports/allure-results
+          mkdir -p reports
+          pytest -v \
+            --html=reports/report.html \
+            --self-contained-html \
+            --alluredir=reports/allure-results
 
-      - name: Verify Allure Results
+      # Debug step (very useful in CI)
+      - name: Debug reports folder
+        if: always()
         run: |
-          echo "Checking reports/allure-results..."
-          ls -R reports/allure-results || true
+          echo "=== Reports Folder Structure ==="
+          ls -R reports || true
+
       # Install Allure CLI
       - name: Install Allure CLI
         run: |
@@ -47,10 +54,12 @@ jobs:
           sudo mv allure-2.27.0 /opt/allure
           sudo ln -s /opt/allure/bin/allure /usr/bin/allure
 
-      # Generate Allure HTML Report (output under reports/)
+      # Generate Allure HTML Report
       - name: Generate Allure Report
+        if: always()
         run: |
-          allure generate reports/allure-results --clean -o reports/allure-report --single-file || true
+          mkdir -p reports/allure-report
+          allure generate reports/allure-results --clean -o reports/allure-report || true
 
       # Upload Pytest HTML Report
       - name: Upload Pytest HTML Report
@@ -60,10 +69,10 @@ jobs:
           name: pytest-report
           path: reports/report.html
 
-      # Upload Allure Report (support directory or single-file outputs)
+      # Upload Allure Report
       - name: Upload Allure Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: allure-report
+          path: reports/allure-report
