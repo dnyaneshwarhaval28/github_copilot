@@ -1,5 +1,5 @@
 browser: chromium
-headless: false
+headless: true
 timeout: 50000
 
 urls:
