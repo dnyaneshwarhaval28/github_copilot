@@ -66,8 +66,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: |
-            reports/allure-report/**
-            reports/allure-report
-            reports/allure-report.html
-            reports/allure-report.zip
+          path: reports/allure-report
